@@ -2,6 +2,9 @@
 layout: post
 published: true
 title: Decorator Design Pattern
+subtitle: >-
+  The decorator design pattern is one of the structural pattern originally
+  introduced in the Gang of Four design patterns book.Let’s go over this pattern with some code examples. For demonstration, consider the following product repository interface and concrete implementation.
 ---
 
 The decorator design pattern is one of the structural pattern originally introduced in the Gang of Four design patterns book.
