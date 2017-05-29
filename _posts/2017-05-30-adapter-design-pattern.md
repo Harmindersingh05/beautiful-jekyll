@@ -11,7 +11,7 @@ In software development, the adapter pattern is definitely one of the most used 
 
 One of the real life example of an adapter design pattern is a laptop charger. We have different electric outlets all over the world. The laptop charger from US will not be compatible with the wall outlet in Europe. This is where an adapter is useful, an adapter that is compatible with local power outlet can be used to resolve this incompatibility.
 
-[image here]
+![Adapter]({{site.baseurl}}/img/Adapter.png)
 
 ### Business example
 
