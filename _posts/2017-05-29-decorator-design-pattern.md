@@ -3,8 +3,6 @@ layout: post
 published: true
 title: Decorator Design Pattern
 ---
-## Decorator Design Pattern
-
 The decorator design pattern is one of the structural pattern originally introduced in the Gang of Four design patterns book.
 
 >It’s intent is to attach additional responsibilities to an object dynamically. Decorators provide a
@@ -53,7 +51,7 @@ Nothing too completed there. The product repository has two methods Get(string c
 
 Let’s say that you want to add caching to the product repository so that you don’t have to query the product from database every time. There are three ways to achieve this, one of course is to add caching into the body of the Get method.
 
-###Solution 1 – Adding caching to Get(string code) method
+### Solution 1 – Adding caching to Get(string code) method
 
 ```C#
 public Product Get(string code)
@@ -79,7 +77,7 @@ public Product Get(string code)
 
 The above code should not be too difficult to understand. MemoryCache is used to cache the product. First, we check whether the product being requested is cached. If yes, the product is returned else the database is queried and if product exists it is added to the cache.
 
-###What is wrong with this solution.
+### What is wrong with this solution.
 
 There are few things wrong with this solution. First, this solution violates the single responsibility principle of SOLID. The product repository has two responsibility. Caching and retrieving products from database. Mixing responsibility reduces meaningful test-ability and creates extra noise in the code.
 
