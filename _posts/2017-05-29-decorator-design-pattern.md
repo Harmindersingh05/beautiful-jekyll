@@ -89,6 +89,93 @@ But, modifying the get product method could potentially break other clients that
 
 So how can we achieve this without violating the Open/closed principle?
 
+### Solution 2 - Sub classing repository
+
+Sub classing is another solution to avoid violating the open/closed principle. We can create CachedProductRepository class and sub-class the ProductRepository class as follows.
+
+```C#
+public class CachedProductRepository: ProductRepository
+{
+      public CachedProductRepository(IDbContext dbContext) : base(dbContext) {}
+      public override Product Get(string code)
+      {
+          ObjectCache cache = MemoryCache.Default;
+          if (cache.Contains(code))
+              return (Product)cache;
+
+          var product = base.Get(code);
+          if (product == null) return null;
+ 
+          //add product to cache and ensure it is removed from the cache after 1 minute.
+          var cacheItemPolicy = new CacheItemPolicy();
+          cacheItemPolicy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(1));
+          cache.Add(code, product, cacheItemPolicy);
+ 
+          return product;
+        }
+    }
+```
+
+As seen in code above, we've sub-classed the ProductRepository. By introducing CachedProductRepository we no longer violate the open-closed and single responsibly principles. Now the ProductRepository Get(string code) method has single responsibility, which is to query products from the database and return.
+
+Further to this, the client can now choose which implementation to use at runtime. CachedProductRepository  or ProductRepository. With this solution the client is not tied to cached repository which is the case with solution 1.
+
+However, sub-classing ProductRepository violates another principle.
+
+>Interface segregation principle
+
+The client that uses CachedProductRepository is only interested in querying cached products not saving products. By sub classing, the save method of the ProductRepository is also visible to the client. This goes against the Interface segregation principle.
+
+>Client should not be forced to implement or be aware of methods that it doesn't need.
+
+### Solution 3 - Decorator design pattern
+
+This leads to our final solution. Adding caching to ProductRepository using decorate design pattern. This solution is similar to second solution. Instead of sub classing the Product repository, it depends on it via constructor injection.
+
+IProductRepositoryCacheDecorator.cs
+
+```C#
+public interface IProductRepositoryCacheDecorator
+{
+     Product Get(string code);
+}
+```
+The concrete implementation
+
+```C#
+public class ProductRepositoryCacheDecorator : IProductRepositoryCacheDecorator
+{
+     private readonly IProductRepository _productRepository;
+     public ProductRepositoryCacheDecorator(IProductRepository productRepository)
+     {
+         _productRepository = productRepository;
+     }
+ 
+     public Product Get(string code)
+     {
+         ObjectCache cache = MemoryCache.Default;
+         if (cache.Contains(code))
+             return (Product)cache;
+ 
+         var product = _productRepository.Get(code);
+         if (product == null) return null;
+ 
+         //add product to cache and ensure it is removed from the cache after 1 minute.
+         var cacheItemPolicy = new CacheItemPolicy();
+         cacheItemPolicy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(1));
+         cache.Add(code, product, cacheItemPolicy);
+ 
+         return product;
+     }
+}
+```
+
+As seen in code above, this solution is quite similar to the sub classing solution. The only difference is the constructor injection that is used to depend on the ProductRepository. With this solution, we no longer expose the save method to the client. The client can directly use IProductRepositoryCacheDecorator interface.
+
+One final improvement that could be made is with the static MemoryCache. We can hide this static implementation behind another interface such IMemoryCache. This will make the code more cleaner and easier to test.
+
+
+
 
 
 
