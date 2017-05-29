@@ -5,7 +5,6 @@ title: Adapter Design Pattern
 ---
 
 In software development, the adapter pattern is definitely one of the most used design pattern. It is used to make two incompatible interfaces work together. The definition of the adapter provided in the original Gang of Four book on design patterns states:
-
 >Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn’t otherwise because of incompatible interfaces.
 
 ### Real life example
