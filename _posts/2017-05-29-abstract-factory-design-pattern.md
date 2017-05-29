@@ -17,21 +17,24 @@ When using dependency injections you cannot instantiate/wire up such class. Why?
 
 Following code illustrates this problem.
 
-{% highlight C# %} 
+<pre>
+<code class="language-csharp">
 public interface IFoo {}
  
 public class Foo : IFoo
 {
     public Foo(IDependency dependency, string data) { }
 }
-{% endhighlight %}
+</code>
+</pre>
 
 The Foo class has an dependency on the IDependency interface and the data parameter. The data parameter is not known until run-time. This class cannot be constructed using dependency injection as described above. What is the solution?
 
 ### Solution
 Abstract factory – any place where you need a run-time value to construct a particular dependency. Abstract Factory is very useful.
 
-```C#
+<pre>
+<code class="language-csharp">
 public interface IFooFactory
 {
     IFoo Create(string data);
@@ -51,7 +54,8 @@ public class FooFactory : IFooFactory
         return new Foo(_dependency, data);
     }
 }
-```
+</code>
+</pre>
 
 As seen above we have introduced the FooFactory which is now responsible for creating an instance of Foo. It also takes a dependency on IDependency interface which is known before run time. The factory exposes a create method, this method can be used by the consumer to create an instance of foo at run time.
 
