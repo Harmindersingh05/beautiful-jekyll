@@ -1,6 +1,6 @@
 ---
 layout: post
-published: false
+published: true
 title: Decorator Design Pattern
 ---
 ## Decorator Design Pattern
