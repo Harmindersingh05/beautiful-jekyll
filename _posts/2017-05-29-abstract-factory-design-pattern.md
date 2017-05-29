@@ -17,14 +17,16 @@ When using dependency injections you cannot instantiate/wire up such class. Why?
 
 Following code illustrates this problem.
 
-```C#
+{% highlight C# 
 public interface IFoo {}
  
 public class Foo : IFoo
 {
     public Foo(IDependency dependency, string data) { }
 }
-```
+
+%}
+
 The Foo class has an dependency on the IDependency interface and the data parameter. The data parameter is not known until run-time. This class cannot be constructed using dependency injection as described above. What is the solution?
 
 ### Solution
