@@ -1,7 +1,7 @@
 ---
 layout: post
 published: true
-title: Abstract-Factory-Design-Pattern
+title: Abstract Factory Design Pattern
 ---
 The Abstract factory pattern is extremely useful among all design patterns. It can be used to solve various problems in dependency injections. In this post, we’ll have a look at two example of abstract factory design pattern.
 
