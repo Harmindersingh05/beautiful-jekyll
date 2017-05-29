@@ -1,3 +1,9 @@
+---
+layout: post
+published: true
+title: Strategy Design Pattern
+---
+
 The strategy pattern is one of my favorite design pattern. It has made my life substantially easier on a bunch of occasions.  You can use strategy design patterns to simplify code with lot of if-else or switch statements. It can be very useful in situations where you check some condition and then run validation logic that is specific to a thing or a category. The strategy pattern can help you clean up the code by converting the if-else or switch statements into strategy objects.
 
 ### Demo
