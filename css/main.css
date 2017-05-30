@@ -531,6 +531,10 @@ footer .theme-by {
   }
 }
 
+.language-csharp {
+  padding-top: 0px;
+}
+
 /* --- Tables --- */
 
 table {
