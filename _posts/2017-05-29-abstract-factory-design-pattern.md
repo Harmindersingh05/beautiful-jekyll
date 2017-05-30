@@ -20,7 +20,6 @@ Following code illustrates this problem.
 <pre>
 <code class="language-csharp">
 public interface IFoo {}
- 
 public class Foo : IFoo
 {
     public Foo(IDependency dependency, string data) { }
