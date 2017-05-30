@@ -18,12 +18,13 @@ When using dependency injections you cannot instantiate/wire up such class. Why?
 Following code illustrates this problem.
 
 
-<pre class="language-csharp">
+<pre><code class="language-csharp">
 public interface IFoo {}
 public class Foo : IFoo
 {
     public Foo(IDependency dependency, string data) { }
 }
+</code>
 </pre>
 
 
