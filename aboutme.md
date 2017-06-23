@@ -1,16 +1,11 @@
 ---
 layout: page
 title: About me
-subtitle: Why you'd want to go on a date with me
+subtitle: Senior Software Developer
 ---
 
-My name is Inigo Montoya. I have the following qualities:
+Hello this is Harminder, a C#, SQL, REST , Angular enthusiastic. Currently work as a software developer at Debitsuccess specializing in billing & accounting solutions.
 
-- I rock a great mustache
-- I'm extremely loyal to my family
+In this blog you will see posts on various technologies which I use daily.
 
-What else do you need?
-
-### my history
-
-To be honest, I'm having some trouble remembering right now, so why don't you just watch [my movie](http://en.wikipedia.org/wiki/The_Princess_Bride_%28film%29) and it will answer **all** your questions.
+For more information please checkout my linkedin.
