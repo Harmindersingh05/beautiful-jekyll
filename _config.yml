@@ -42,7 +42,7 @@ avatar: "/img/self.jpg"
 author:
   name: Harminder Singh
   email: "singh.harminder05@gmail.com"  
-  linkedin: https://www.linkedin.com/in/harminder-singh-a8ba2142/  # eg. daattali
+  linkedin: harminder-singh-a8ba2142  # eg. daattali
  
 
 # Select which links to show in the footer
