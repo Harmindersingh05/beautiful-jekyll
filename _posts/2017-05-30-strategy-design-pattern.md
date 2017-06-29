@@ -206,7 +206,6 @@ public class UsaAddressValidationStrategy : IAddressValidationStrategy
     {
         return country.Equals(Country.UnitedStatesOfAmerica);
     }
-
 </code></pre> 
 
 <pre><code class="language-csharp">
@@ -234,11 +233,10 @@ public class AusAddressValidationStrategy : IAddressValidationStrategy
         return country.Equals(Country.Australia);
     }
 }
-
 </code></pre> 
-Finally the improved AccountService.cs class
 
-<pre><code class="language-csharp">
+<pre>
+<code class="language-csharp">
 public class AccountService : IAccountService
 {
     private readonly List<IAddressValidationStrategy> _addressValidationStrategies;
@@ -263,7 +261,8 @@ public class AccountService : IAccountService
         return response;
     }
 }
-</code></pre> 
+</code>
+</pre> 
 
 As seen in above we have introduced a common interface for our validation and split the country specific validation code into strategy objects. We also maintain a list of validation strategies inside the account service class. The usage of the common validation interface has drastically reduced the validation code inside the SaveAccountDetails function. The improved account service simply locates the first matching validation strategy for the country and performs the validation.
 
