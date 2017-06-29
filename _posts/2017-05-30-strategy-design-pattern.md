@@ -163,6 +163,8 @@ public interface IAddressValidationStrategy
 </code></pre>  
 Next, we have to create strategy objects for each country.
 
+NzAddressValidationStrategy
+
 <pre><code class="language-csharp">
 public class NzAddressValidationStrategy : IAddressValidationStrategy
 {
@@ -185,6 +187,8 @@ public class NzAddressValidationStrategy : IAddressValidationStrategy
 }
 </code></pre>  
 
+UsaAddressValidationStrategy
+
 <pre><code class="language-csharp">
 public class UsaAddressValidationStrategy : IAddressValidationStrategy
 {
@@ -206,7 +210,10 @@ public class UsaAddressValidationStrategy : IAddressValidationStrategy
     {
         return country.Equals(Country.UnitedStatesOfAmerica);
     }
+}
 </code></pre> 
+
+AusAddressValidationStrategy
 
 <pre><code class="language-csharp">
 public class AusAddressValidationStrategy : IAddressValidationStrategy
@@ -239,10 +246,10 @@ public class AusAddressValidationStrategy : IAddressValidationStrategy
 <code class="language-csharp">
 public class AccountService : IAccountService
 {
-    private readonly List<IAddressValidationStrategy> _addressValidationStrategies;
+    private readonly List&lt;IAddressValidationStrategy&gt; _addressValidationStrategies;
     private readonly IAccountRepository _accountRepository;
 
-    public AccountServiceWithPattern(List<IAddressValidationStrategy> addressValidationStrategies,
+    public AccountServiceWithPattern(List&lt;IAddressValidationStrategy&gt; addressValidationStrategies,
         IAccountRepository accountRepository)
     {
         _addressValidationStrategies = addressValidationStrategies;
@@ -262,7 +269,7 @@ public class AccountService : IAccountService
     }
 }
 </code>
-</pre> 
+</pre>
 
 As seen in above we have introduced a common interface for our validation and split the country specific validation code into strategy objects. We also maintain a list of validation strategies inside the account service class. The usage of the common validation interface has drastically reduced the validation code inside the SaveAccountDetails function. The improved account service simply locates the first matching validation strategy for the country and performs the validation.
 
@@ -273,7 +280,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var addressValidation = new List<IAddressValidationStrategy>
+        var addressValidation = new List&lt;IAddressValidationStrategy&gt;
         {
             new AusAddressValidationStrategy(),
             new UsaAddressValidationStrategy(),
