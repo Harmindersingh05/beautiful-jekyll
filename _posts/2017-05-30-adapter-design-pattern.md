@@ -19,7 +19,7 @@ To illustrate adapter design pattern in business scenario. Lets say the company 
 
 Both payment gateways provide Api that we can integrate with. The Api endpoints that we are interested in are provided in c#:
 
-```C#
+<pre><code class="language-csharp">
 public class OnlinePaymentGateway
 {
      public void ProcessCreditCardPayment(CreditCardInfo creditCardInfo)
@@ -27,8 +27,9 @@ public class OnlinePaymentGateway
          //implementation omitted
      }
 }
-```
-```C#
+</code></pre>
+
+<pre><code class="language-csharp">
 public class ExpressPaymentGateway
    {
        public void MakeCreditCardPayment(CreditCard creditCard)
@@ -36,10 +37,12 @@ public class ExpressPaymentGateway
            //implementation omitted
        }
    }
-```
+</code></pre>
+
+
 Note how both endpoints have different method signatures that can be used to make payments. In our website we have the following PaymentService class that is responsible for processing credit card payments, using one of the two payment gateways. This service also uses the ICreditCardRepository to retrieve the credit card details for the user making the payment.
 
-```C#
+<pre><code class="language-csharp">
 public class PaymentService
 {
     private readonly ICreditCardRepository _creditCardRepository;
@@ -56,11 +59,13 @@ public class PaymentService
         //Make payment using 3rd party payment gateways
     }
 }
-```
+</code></pre>
+
 We have to complete the MakePayment function, this function must communicate with the active gateway and process payments. This function can be implemented in two ways, using an adapter design pattern and without it. We’ll first implement it without using the adapter design pattern then refactor it using the adapter pattern.
 
 ### Solution without adapter pattern.
-```C#
+
+<pre><code class="language-csharp">
 public class PaymentService
 {
     private readonly ICreditCardRepository _creditCardRepository;
@@ -89,7 +94,8 @@ public class PaymentService
         }
     }
 }
-```
+</code></pre>
+
 As seen in the code above, We have introduced the IPaymentGatewayConfig, this is used to retrieve the active payment gateway from database. Second, we have integrated the 3rd party payment gateways directly into the MakePayment method.
 
 With this implementation we’re stuck with the two payment gateways. What if we want to add another gateway? In that case we’d need to go in and modify the PaymentService. Even worse, lets say the business wants to add 3 more payment gateways the MakePayment method will become quite noisy.
@@ -101,16 +107,16 @@ To support more gateways we’ll factor out the payment gateways using an adapte
 ### Solution using adapter pattern.
 Create a common adapter interface for all payment gateways.
 
-```c#
+<pre><code class="language-csharp">
 public interface IPaymentGatewayAdapter
 {
      void ProcessPayment(decimal amount, CreditCard creditCardInfo);
 }
-```
+</code></pre>
 
 Next we want to update the PaymentService class to depend on this interface.
 
-```C#
+<pre><code class="language-csharp">
 public class PaymentService
 {
     private readonly ICreditCardRepository _creditCardRepository;
@@ -129,11 +135,11 @@ public class PaymentService
         _paymentGatewayAdapter.ProcessPayment(amount, creditCardDetails);
     }
 }
-```
+</code></pre>
 
 We’ve completely got rid of all references to the payment gateway API. Now this class has single responsibility that is to only make payments and does not need to know anything about payment gateways. We now have one interface that PaymentService can depend on. The next task is to inject the payment gateway classes using the IPaymentGatewayAdapter. create two classes that will adapt to IPaymentGatewayAdapter.
 
-```C#
+<pre><code class="language-csharp">
 public class OnlinePaymentGatewayAdaptee : IPaymentGatewayAdapter
 {
     public void ProcessPayment(decimal amount, CreditCard creditCardInfo)
@@ -151,13 +157,13 @@ public class ExpressPaymentGatewayAdaptee : IPaymentGatewayAdapter
         expressPayment.MakeCreditCardPayment(amount, creditCardInfo);
     }
 }
-```
+</code></pre>
 
 Note how the adapter pattern is useful in this situation. It is resolving the incompatibility of the two Interfaces the OnlinePaymentGateway and the ExpressPaymentGateway. This is the job of the adapter pattern, as stated in the description “Adapter lets classes work together that couldn’t otherwise because of incompatible interfaces”.
 
 Using poor man’s dependency injection we can put everything together as follows:
 
-```c#
+<pre><code class="language-csharp">
 public class Program
 {
     private static void Main(string[] args)
@@ -182,33 +188,8 @@ public class Program
 
     }
 }
-```
+</code></pre>
+
 In the future if you want to add more payment gateways then all you need to do is create another adapter class for that. Note that we have not used any Inversion of Control containers to inject our dependencies so that we don’t get distracted by technical details. Instead we’ll do it the old way, i.e. by poor man’s dependency injection.
 
 We can further improve the code above by refactoring the creation of the payment gatways into a abstract factory. I will do this in a another blog post on abstract factory design pattern.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
