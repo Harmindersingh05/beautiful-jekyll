@@ -17,8 +17,7 @@ When using dependency injections you cannot instantiate/wire up such class. Why?
 
 Following code illustrates this problem.
 
-<pre>
-<code class="language-csharp">
+<pre><code class="language-csharp">
 public interface IFoo {}
 
 public class Foo : IFoo
@@ -33,8 +32,7 @@ The Foo class has an dependency on the IDependency interface and the data parame
 ### Solution
 Abstract factory – any place where you need a run-time value to construct a particular dependency. Abstract Factory is very useful.
 
-<pre>
-<code class="language-csharp">
+<pre><code class="language-csharp">
 public interface IFooFactory
 {
     IFoo Create(string data);
@@ -54,8 +52,7 @@ public class FooFactory : IFooFactory
         return new Foo(_dependency, data);
     }
 }
-</code>
-</pre>
+</code></pre>
 
 As seen above we have introduced the FooFactory which is now responsible for creating an instance of Foo. It also takes a dependency on IDependency interface which is known before run time. The factory exposes a create method, this method can be used by the consumer to create an instance of foo at run time.
 
@@ -63,7 +60,7 @@ In DI container, we would register both the IDependency and IFooFactory. All con
 
 Example of consumer using IFooFactory.
 
-```C#
+<pre><code class="language-csharp">
 public class Consumer
 {
     private readonly IFooFactory _fooFactory;
@@ -78,7 +75,7 @@ public class Consumer
          // use your foo.
     }
 }
-```
+</code></pre>
 
 ### Business Example
 The foo example used above is quite simple. Let’s have a look at a business example.
@@ -92,7 +89,7 @@ one interface. And the user has to decide at run time which implementation to us
 
 Consider the following code taken from adapter pattern post.
 
-```C#
+<pre><code class="language-csharp">
 public static void Main(string[] args)
 {
        IConfiguration configuration = new Configuration();
@@ -112,7 +109,8 @@ public static void Main(string[] args)
        int userId = 20312;
        paymentService.MakePayment(amount, userId);
 }
-```
+</code></pre>
+
 The above code should not be too difficult to understand. It creates an concentrate implementation of 
 IPaymentGatewayAdapter based on the payment gateway provided in the configuration file. It then passes 
 the IPaymentGatewayAdapter to the IPaymentService which uses it to make payments. The IPaymentGatewayAdapter 
@@ -125,7 +123,7 @@ our customer with the option to select which gateway they prefer paying through.
 As seen in the code example above, the IPaymentGatewayAdapter is initialized based on configurations. 
 To accommodate the new requirements the configuration class has to go.
 
-```C#
+<pre><code class="language-csharp">
 public static void Main(string[] args)
  {             
        IPaymentGatewayAdapter paymentGatewayAdapter;
@@ -147,7 +145,8 @@ public static void Main(string[] args)
        int userId = 20312;
        paymentService.MakePayment(amount, userId);
 }
-```
+</code></pre>
+
 In the code above the configuration file has been removed and we are initialing the 
 PaymentGatewayAdapter based on the user’s input.
 
@@ -159,7 +158,7 @@ stage and the user’s input is not available at this stage.
 
 You guessed it, abstract factory. Let’s refactor the above code to make it more DI friendly using a abstract factory.
 
-```C#
+<pre><code class="language-csharp">
 public static void Main(string[] args)
 {
      IPaymentGatewayFactory paymentGatewayFactory = new PaymentGatewayFactory();
@@ -171,7 +170,8 @@ public static void Main(string[] args)
      string gatewayName = "ExpressPaymentGatewayAdaptee";
      paymentService.MakePayment(gatewayName,amount, userId);
 }
-```
+</code></pre>
+
 In the above code, we have introduced IPaymentGatewayFactory, modified the MakePayment method and updated 
 the PaymentService class to depend on the IPaymentGatewayFactory. The IPaymentGatewayFactory factory is 
 responsible for initialing the IPaymentGatewayAdapter based on the customer’s selection. The customer’s 
@@ -179,10 +179,10 @@ selection is provided through the new parameter on MakePayment method.
 
 PaymentGatewayFactory.cs
 
-```C#
+<pre><code class="language-csharp">
 public class PaymentGatewayFactory : IPaymentGatewayFactory
 {
-     Dictionary<string, Type> _paymentGateways;
+     Dictionary&lt;string, Type&gt; _paymentGateways;
  
      public PaymentGatewayFactory()
      {
@@ -208,7 +208,7 @@ public class PaymentGatewayFactory : IPaymentGatewayFactory
        
      private void LoadPaymentGatewayTypes()
      {
-         _paymentGateways = new Dictionary<string, Type>();
+         _paymentGateways = new Dictionary&lt;string, Type&gt;();
  
          Type[] typesInAssembly = Assembly.GetExecutingAssembly().GetTypes();
          var paymentGatewayTypes = typesInAssembly
@@ -219,7 +219,7 @@ public class PaymentGatewayFactory : IPaymentGatewayFactory
              _paymentGateways.Add(type.Name.ToLower(), type);
          }
 }
-```
+</code></pre>
 
 The PaymentGatewayFactory uses reflection to find all concrete classes of type IPaymentGatewayAdapter based on 
 the customer’s selection.  We could have used If else statements to select the correct implementation. 
@@ -229,7 +229,7 @@ class that implements IPaymentGatewayAdapter.
 
 Re-factored PaymentService.cs
 
-```C#
+<pre><code class="language-csharp">
 public class PaymentService : IPaymentService
 {
      private readonly ICreditCardRepository _creditCardRepository;
@@ -248,36 +248,7 @@ public class PaymentService : IPaymentService
          paymentGateway.ProcessPayment(amount, creditCardDetails);
      }
 }
-```
+</code></pre>
+
 As demonstrated in the two examples above, the abstract factory pattern fits perfectly when you 
 have to construct a implementation based on run-time values.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
