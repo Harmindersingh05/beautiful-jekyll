@@ -10,15 +10,15 @@ flexible alternative to subclassing for extending functionality
 
 Let’s go over this pattern with some code examples. For demonstration, consider the following product repository interface and concrete implementation.
 
-```C#
+<pre><code class="language-csharp">
 public interface IProductRepository
 {
      Product Get(string code);
      Product Save(Product product);
 }
-```
+</code></pre>
 
-```C#
+<pre><code class="language-csharp">
 public class ProductRepository : IProductRepository
 {
      private readonly IDbContext _dbContext;
@@ -45,7 +45,7 @@ public class ProductRepository : IProductRepository
          return product;
      }
 }
-```
+</code></pre>
 
 Nothing too completed there. The product repository has two methods Get(string code) which returns product that matches the code provided from the database. And the Save() method, which saves a product to the database.
 
@@ -53,7 +53,7 @@ Let’s say that you want to add caching to the product repository so that you d
 
 ### Solution 1 – Adding caching to Get(string code) method
 
-```C#
+<pre><code class="language-csharp">
 public Product Get(string code)
 {
        ObjectCache cache = MemoryCache.Default;
@@ -73,7 +73,7 @@ public Product Get(string code)
  
        return product;
 }
-```
+</code></pre>
 
 The above code should not be too difficult to understand. MemoryCache is used to cache the product. First, we check whether the product being requested is cached. If yes, the product is returned else the database is queried and if product exists it is added to the cache.
 
@@ -93,7 +93,7 @@ So how can we achieve this without violating the Open/closed principle?
 
 Sub classing is another solution to avoid violating the open/closed principle. We can create CachedProductRepository class and sub-class the ProductRepository class as follows.
 
-```C#
+<pre><code class="language-csharp">
 public class CachedProductRepository: ProductRepository
 {
       public CachedProductRepository(IDbContext dbContext) : base(dbContext) {}
@@ -114,7 +114,7 @@ public class CachedProductRepository: ProductRepository
           return product;
         }
     }
-```
+</code></pre>
 
 As seen in code above, we've sub-classed the ProductRepository. By introducing CachedProductRepository we no longer violate the open-closed and single responsibly principles. Now the ProductRepository Get(string code) method has single responsibility, which is to query products from the database and return.
 
@@ -134,15 +134,15 @@ This leads to our final solution. Adding caching to ProductRepository using deco
 
 IProductRepositoryCacheDecorator.cs
 
-```C#
+<pre><code class="language-csharp">
 public interface IProductRepositoryCacheDecorator
 {
      Product Get(string code);
 }
-```
+</code></pre>
 The concrete implementation
 
-```C#
+<pre><code class="language-csharp">
 public class ProductRepositoryCacheDecorator : IProductRepositoryCacheDecorator
 {
      private readonly IProductRepository _productRepository;
@@ -168,38 +168,8 @@ public class ProductRepositoryCacheDecorator : IProductRepositoryCacheDecorator
          return product;
      }
 }
-```
+</code></pre>
 
 As seen in code above, this solution is quite similar to the sub classing solution. The only difference is the constructor injection that is used to depend on the ProductRepository. With this solution, we no longer expose the save method to the client. The client can directly use IProductRepositoryCacheDecorator interface.
 
 One final improvement that could be made is with the static MemoryCache. We can hide this static implementation behind another interface such IMemoryCache. This will make the code more cleaner and easier to test.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
